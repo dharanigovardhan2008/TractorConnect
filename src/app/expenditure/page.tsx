@@ -57,7 +57,7 @@ const fadeUp = {
   hidden: { opacity: 0, y: 20 },
   visible: (i = 0) => ({
     opacity: 1, y: 0,
-    transition: { delay: i * 0.06, type: "spring", stiffness: 240, damping: 24 }
+    transition: { delay: i * 0.06, type: "spring" as const, stiffness: 240, damping: 24 }
   })
 };
 const stagger = {
@@ -492,7 +492,7 @@ function NetProfitCard({
   title, icon:Icon, accent, accentBg, periods, getValue
 }: {
   title:string; icon:React.ElementType; accent:string; accentBg:string;
-  periods:typeof import("./ExpenditurePage").periods; getValue:(p:Period)=>number;
+  periods: { label: string; key: Period; icon: React.ElementType }[]; getValue:(p:Period)=>number;
 }) {
   return (
     <motion.div custom={0} variants={fadeUp} initial="hidden" animate="visible"

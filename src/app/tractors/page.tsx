@@ -177,7 +177,7 @@ export default function TractorsPage() {
     serviceId: "",
     areaOrTime: "",
     amount: "",
-    paymentStatus: "unpaid" as const,
+    paymentStatus: "unpaid" as "paid" | "partial" | "unpaid",
     paidAmount: "",
   });
 
