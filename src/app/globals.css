@@ -32,5 +32,10 @@ body {
 .pill-capsule {
   border-radius: 9999px;
 }
+html,
+body {
+  border: none !important;
+  outline: none !important;
+}
 
 ::-webkit-scrollbar { display: none; }
