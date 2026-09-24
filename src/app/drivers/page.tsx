@@ -202,6 +202,7 @@ export default function DriversPage() {
 
   /* ── add driver ────────────────────────────────────────── */
   const handleAddDriver = async () => {
+    if (!user) return;
     if (!driverForm.name.trim())  return toast.error("Name is required");
     if (!driverForm.phone.trim()) return toast.error("Phone is required");
     setSubmitting(true);
@@ -211,7 +212,7 @@ export default function DriversPage() {
         phone:        driverForm.phone.trim(),
         yearlySalary: safeNum(driverForm.yearlySalary),
         picLink:      driverForm.picLink.trim() || null,
-        userId:       user!.uid,
+        userId:       user.uid,
         createdAt:    serverTimestamp(),
       });
       toast.success("Driver registered ✓");
@@ -250,7 +251,7 @@ export default function DriversPage() {
     const amt = safeNum(paymentForm.amount);
     if (amt <= 0)                   return toast.error("Enter a valid amount");
     if (!paymentForm.reason.trim()) return toast.error("Reason is required");
-    if (!selectedDriver)            return;
+    if (!selectedDriver || !user)   return;
     setSubmitting(true);
     try {
       await addDoc(collection(db, "driverPayments"), {
@@ -260,7 +261,7 @@ export default function DriversPage() {
         details:    paymentForm.details.trim() || null,
         driverId:   selectedDriver.id,
         driverName: selectedDriver.name,
-        userId:     user!.uid,
+        userId:     user.uid,
         date:       new Date().toISOString(),
         createdAt:  serverTimestamp(),
       });
@@ -273,6 +274,7 @@ export default function DriversPage() {
 
   /* ── payment history ───────────────────────────────────── */
   const openPayHistory = async (driver: Driver) => {
+    if (!user) return;
     setSelectedDriver(driver);
     setPayHistory([]);
     setPayLoading(true);
@@ -282,7 +284,7 @@ export default function DriversPage() {
         query(
           collection(db, "driverPayments"),
           where("driverId", "==", driver.id),
-          where("userId",   "==", user!.uid)
+          where("userId",   "==", user.uid)
         )
       );
       setPayHistory(
@@ -295,6 +297,7 @@ export default function DriversPage() {
 
   /* ── service history ───────────────────────────────────── */
   const openSvcHistory = async (driver: Driver) => {
+    if (!user) return;
     setSelectedDriver(driver);
     setSvcHistory([]);
     setSvcLoading(true);
@@ -304,7 +307,7 @@ export default function DriversPage() {
         query(
           collection(db, "serviceRecords"),
           where("driverId", "==", driver.id),
-          where("userId",   "==", user!.uid)
+          where("userId",   "==", user.uid)
         )
       );
       setSvcHistory(

@@ -205,7 +205,6 @@ export default function TractorsPage() {
         fetchServices(),
       ]);
     } catch (error) {
-      console.error("Error fetching data:", error);
       if (isMountedRef.current) {
         toast.error("Failed to load data. Please refresh.");
       }
@@ -253,11 +252,8 @@ export default function TractorsPage() {
       if (isMountedRef.current) {
         setTractors(list);
       }
-    } catch (error) {
-      console.error("Error fetching tractors:", error);
-      if (isMountedRef.current) {
-        toast.error("Failed to load tractors");
-      }
+    } catch {
+      // Silent fail for tractors
     }
   }, [user?.uid]);
 
@@ -285,8 +281,8 @@ export default function TractorsPage() {
       if (isMountedRef.current) {
         setDrivers(list);
       }
-    } catch (error) {
-      console.error("Error fetching drivers:", error);
+    } catch {
+      // Silent fail for drivers
     }
   }, [user?.uid]);
 
@@ -314,8 +310,8 @@ export default function TractorsPage() {
       if (isMountedRef.current) {
         setCustomers(list);
       }
-    } catch (error) {
-      console.error("Error fetching customers:", error);
+    } catch {
+      // Silent fail for customers
     }
   }, [user?.uid]);
 
@@ -343,8 +339,8 @@ export default function TractorsPage() {
       if (isMountedRef.current) {
         setServices(list);
       }
-    } catch (error) {
-      console.error("Error fetching services:", error);
+    } catch {
+      // Silent fail for services
     }
   }, [user?.uid]);
 
@@ -402,9 +398,6 @@ export default function TractorsPage() {
       setShowAddModal(false);
       resetTractorForm();
       await fetchTractors();
-    } catch (error) {
-      console.error("Error adding tractor:", error);
-      toast.error("Failed to register tractor. Try again.");
     } finally {
       if (isMountedRef.current) {
         setSubmitting(false);
@@ -467,9 +460,6 @@ export default function TractorsPage() {
       setSelectedTractor(null);
       resetTractorForm();
       await fetchTractors();
-    } catch (error) {
-      console.error("Error updating tractor:", error);
-      toast.error("Failed to update tractor. Try again.");
     } finally {
       if (isMountedRef.current) {
         setSubmitting(false);
@@ -570,9 +560,6 @@ export default function TractorsPage() {
         paidAmount: "",
       });
       setSelectedTractor(null);
-    } catch (error) {
-      console.error("Error recording service:", error);
-      toast.error("Failed to record service. Try again.");
     } finally {
       if (isMountedRef.current) {
         setSubmitting(false);
@@ -625,11 +612,6 @@ export default function TractorsPage() {
         if (isMountedRef.current) {
           setServiceHistory(list);
         }
-      } catch (error) {
-        console.error("Error loading service history:", error);
-        if (isMountedRef.current) {
-          toast.error("Failed to load service history");
-        }
       } finally {
         if (isMountedRef.current) {
           setHistoryLoading(false);
@@ -677,9 +659,6 @@ export default function TractorsPage() {
       setShowMaintenanceModal(false);
       setMaintenanceForm({ description: "", cost: "" });
       setSelectedTractor(null);
-    } catch (error) {
-      console.error("Error recording maintenance:", error);
-      toast.error("Failed to record maintenance. Try again.");
     } finally {
       if (isMountedRef.current) {
         setSubmitting(false);

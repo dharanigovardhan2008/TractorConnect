@@ -51,9 +51,6 @@ export default function ServicesPage() {
       const list: Service[] = [];
       snap.forEach((d) => list.push({ id: d.id, ...d.data() } as Service));
       setServices(list);
-    } catch (e) {
-      console.error("Error fetching services:", e);
-      toast.error("Telemetry failed to load");
     } finally {
       setDataLoading(false);
     }

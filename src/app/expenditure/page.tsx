@@ -242,9 +242,16 @@ export default function ExpenditurePage() {
                 <LayoutGroup>
                   {/* Desktop heading */}
                   <div className="hidden md:grid grid-cols-12 px-8 py-3">
-                    {["Customer","Date","Total","Collected","Due",""].map((h,i)=>(
-                      <div key={i} className={`col-span-${[3,2,2,2,2,1][i]} ${i>=2?"text-right":""}`}>
-                        <span className="text-[8px] font-black uppercase tracking-widest text-white/20">{h}</span>
+                    {[
+                      { label: "Customer", span: "col-span-3" },
+                      { label: "Date", span: "col-span-2" },
+                      { label: "Total", span: "col-span-2 text-right" },
+                      { label: "Collected", span: "col-span-2 text-right" },
+                      { label: "Due", span: "col-span-2 text-right" },
+                      { label: "", span: "col-span-1" },
+                    ].map((h, i) => (
+                      <div key={i} className={h.span}>
+                        <span className="text-[8px] font-black uppercase tracking-widest text-white/20">{h.label}</span>
                       </div>
                     ))}
                   </div>

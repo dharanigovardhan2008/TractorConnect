@@ -4,19 +4,28 @@ import { Listbox, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { MdCheck, MdUnfoldMore } from 'react-icons/md';
 
+interface Option {
+  id: string;
+  name: string;
+}
+
 interface CustomSelectProps {
-  options: { id: string; name: string }[];
-  value: any;
-  onChange: (value: any) => void;
+  options: Option[];
+  value: Option | null | undefined;
+  onChange: (value: Option) => void;
   placeholder: string;
 }
 
 export default function CustomSelect({ options, value, onChange, placeholder }: CustomSelectProps) {
   return (
-    <Listbox value={value} onChange={onChange}>
+    <Listbox value={value || {}} onChange={(val) => {
+      if (val && typeof val === 'object' && 'id' in val && 'name' in val) {
+        onChange(val as Option);
+      }
+    }}>
       <div className="relative w-full">
         <Listbox.Button className="relative w-full cursor-default rounded-full bg-white/5 border border-white/10 py-4 pl-6 pr-12 text-left text-white text-sm outline-none focus:border-emerald-neon/50 focus:bg-white/10 transition-all">
-          <span className="block truncate">{value ? value.name : placeholder}</span>
+          <span className="block truncate">{value?.name || placeholder}</span>
           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-5">
             <MdUnfoldMore className="h-5 w-5 text-white/30" aria-hidden="true" />
           </span>

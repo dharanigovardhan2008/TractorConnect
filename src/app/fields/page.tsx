@@ -76,11 +76,15 @@ export default function FieldsPage() {
     });
 
     const unsubMaint = onSnapshot(query(collection(db, "fieldMaintenance"), where("userId", "==", user.uid)), (snap) => {
-      setMaintenance(snap.docs.map(d => ({ id: d.id, type: "expense", ...d.data() } as any)));
+      setMaintenance(snap.docs.map(d => ({ id: d.id, type: "expense" as const, ...d.data() } as Transaction)));
     });
 
     const unsubIncome = onSnapshot(query(collection(db, "fieldIncome"), where("userId", "==", user.uid)), (snap) => {
-      setIncome(snap.docs.map(d => ({ id: d.id, type: d.data().amount > 0 ? "income" : "yield_only", ...d.data() } as any)));
+      setIncome(snap.docs.map(d => {
+        const data = d.data();
+        const type = data.amount > 0 ? "income" : "yield_only";
+        return { id: d.id, type, ...data } as Transaction;
+      }));
     });
 
     return () => { unsubFields(); unsubMaint(); unsubIncome(); };
@@ -150,7 +154,15 @@ export default function FieldsPage() {
     } catch (e) { toast.error("Failed"); }
   };
 
-  if (!isMounted) return null;
+  if (!isMounted) {
+    return (
+      <div className="min-h-screen bg-[#010B09] flex items-center justify-center">
+        <div className="w-12 h-12 border-2 border-emerald-400/20 border-t-emerald-400 rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!user) return null;
 
   return (
     <div className="min-h-screen bg-[#010B09] text-white">

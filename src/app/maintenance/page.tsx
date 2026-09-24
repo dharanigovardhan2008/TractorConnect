@@ -66,7 +66,15 @@ export default function MaintenancePage() {
     totalCost: records.reduce((sum, r) => sum + Number(r.cost), 0),
   };
 
-  if (!isMounted || !user) return null;
+  if (!isMounted) {
+    return (
+      <div className="min-h-screen bg-[#010B09] flex items-center justify-center">
+        <div className="w-12 h-12 border-2 border-emerald-400/20 border-t-emerald-400 rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!user) return null;
 
   return (
     <div className="min-h-screen bg-[#010B09] text-white">

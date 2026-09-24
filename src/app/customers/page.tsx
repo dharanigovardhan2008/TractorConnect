@@ -452,9 +452,9 @@ export default function CustomersPage() {
   const [hasMounted,    setHasMounted]    = useState(false);
   const [sidebarOpen,   setSidebarOpen]   = useState(false);
   const [customers,     setCustomers]     = useState<Customer[]>([]);
-  const [drivers,       setDrivers]       = useState<any[]>([]);
-  const [tractors,      setTractors]      = useState<any[]>([]);
-  const [services,      setServices]      = useState<any[]>([]);
+  const [drivers,       setDrivers]       = useState<{id: string; name: string}[]>([]);
+  const [tractors,      setTractors]      = useState<{id: string; name: string}[]>([]);
+  const [services,      setServices]      = useState<{id: string; name: string}[]>([]);
   const [history,       setHistory]       = useState<ServiceLog[]>([]);
   const [refreshKey,    setRefreshKey]    = useState(0);
   const [submitting,    setSubmitting]    = useState(false);
@@ -490,9 +490,9 @@ export default function CustomersPage() {
         getDocs(query(collection(db, "tractors"), where("userId", "==", user.uid))),
         getDocs(query(collection(db, "services"), where("userId", "==", user.uid))),
       ]);
-      setDrivers(ds.docs.map(d => ({ id: d.id, ...d.data() })));
-      setTractors(ts.docs.map(d => ({ id: d.id, ...d.data() })));
-      setServices(ss.docs.map(d => ({ id: d.id, ...d.data() })));
+      setDrivers(ds.docs.map(d => ({ id: d.id, name: d.data().name || "Unknown", ...d.data() })));
+      setTractors(ts.docs.map(d => ({ id: d.id, name: d.data().name || "Unknown", ...d.data() })));
+      setServices(ss.docs.map(d => ({ id: d.id, name: d.data().name || "Unknown", ...d.data() })));
     } catch { toast.error("Could not load dropdown data"); }
   }, [user]);
 
@@ -530,7 +530,7 @@ export default function CustomersPage() {
   const handleAddService = useCallback(async () => {
     if (!serviceForm.serviceId) return toast.error("Service is required");
     if (!serviceForm.amount)    return toast.error("Amount is required");
-    if (!selectedCustomer)      return;
+    if (!selectedCustomer || !user)      return;
 
     const totalBill = n(serviceForm.amount);
     if (totalBill <= 0) return toast.error("Amount must be > 0");
@@ -565,7 +565,7 @@ export default function CustomersPage() {
         paymentStatus:   serviceForm.paymentStatus,
         referenceNumber: serviceForm.referenceNumber || null,
         date:            new Date().toISOString(),
-        userId:          user!.uid,
+        userId:          user.uid,
         createdAt:       serverTimestamp(),
       });
       toast.success("Service recorded ✓");
@@ -578,6 +578,7 @@ export default function CustomersPage() {
 
   /* ── Add customer ──────────────────────────────────────── */
   const handleAddCustomer = useCallback(async () => {
+    if (!user) return;
     if (!customerForm.name.trim())  return toast.error("Name is required");
     if (!customerForm.phone.trim()) return toast.error("Phone is required");
 
@@ -588,7 +589,7 @@ export default function CustomersPage() {
         phone:        customerForm.phone.trim(),
         loyaltyLevel: customerForm.loyaltyLevel,
         photoUrl:     customerForm.photoUrl.trim() || null,
-        userId:       user!.uid,
+        userId:       user.uid,
         createdAt:    serverTimestamp(),
       });
       toast.success("Customer added ✓");

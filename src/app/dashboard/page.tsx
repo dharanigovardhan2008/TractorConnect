@@ -415,8 +415,7 @@ export default function DashboardPage() {
     );
 
     return () => unsubs.forEach(u => u());
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.uid, isMounted]);        // ← stable: uid string, not user object
+  }, [user?.uid, isMounted]);
 
   /* ── Computed data ───────────────────────────────────── */
   const data = useMemo(() => {
